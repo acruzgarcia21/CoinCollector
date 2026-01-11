@@ -5,12 +5,12 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions _playerInputActions;
     private Rigidbody _playerRigidBody;
 
-    [Header("Movement Fields")] [SerializeField]
-    private float maxSpeed = 8f;
-    
+    [Header("Movement Fields")] [SerializeField] private float maxSpeed = 8f;
     [SerializeField] private float acceleration = 30f;
     [SerializeField] private float braking = 20f;
     [SerializeField] private float jumpingForce = 5f;
+
+    [Header("Camera")] [SerializeField] private Transform cameraTransform;
 
     private void Awake()
     {
@@ -33,7 +33,19 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector2 playerInput = _playerInputActions.Player.Movement.ReadValue<Vector2>();
-        Vector3 directionInput = new Vector3(playerInput.x, 0, playerInput.y);
+        
+        // Camera direction
+        Vector3 camForward = cameraTransform.forward;
+        Vector3 camRight = cameraTransform.right;
+
+        camForward.y = 0f;
+        camRight.y = 0f;
+
+        camForward.Normalize();
+        camRight.Normalize();
+        
+        // Convert WASD into camera-relative world direction
+        var directionInput = camRight * playerInput.x + camForward * playerInput.y;
         
         // This is a slight optimization that allows for controllers to not normalize when 
         // analog stick is barley pushed.
