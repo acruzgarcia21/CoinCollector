@@ -84,7 +84,6 @@ public class PlayerController : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        Debug.Log("Jump " + context.phase);
         _playerRigidBody.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
     }
 }
