@@ -1,4 +1,4 @@
-# Unity Ball Collector – New Input System Demo
+# Unity Coin Collector – New Input System Demo
 
 ## Overview
 This project is a small beginner Unity game created to demonstrate foundational knowledge of Unity’s **New Input System**, **Rigidbody-based movement**, and **basic physics interactions**. The game is intentionally simple and focuses on learning core mechanics rather than visual polish or advanced systems.
