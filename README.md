@@ -86,7 +86,13 @@ Created as a learning project to explore Unity fundamentals, physics-based movem
 
 ---
 
-## Gifs and Screenshots
+## Gifs
+
+![GameStart](https://github.com/user-attachments/assets/9e846aff-9e22-4f82-8b82-a3abf366147c)
+
+![CollectCoins](https://github.com/user-attachments/assets/e34dd44f-1a10-454d-968f-cecf3f1fd562)
+
+
 ![GameOver](https://github.com/user-attachments/assets/bf96462a-c670-4261-b13b-00ddf6ad8e48)
 
 
