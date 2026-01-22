@@ -33,10 +33,6 @@ public class GameManager : MonoBehaviour
         
         hudUI?.SetCoins(_coinsCollected, _totalCoins);
         hudUI?.SetTime(_elapsedTime);
-        
-        Debug.Log($"HUD ref = {(hudUI ? hudUI.name : "NULL")}");
-        Debug.Log($"HUD coinsText = {hudUI?.name} / coinsTextNull? {hudUI == null}");
-
     }
 
     private void Update()
@@ -60,17 +56,6 @@ public class GameManager : MonoBehaviour
             Win();
         }
     }
-
-    public int GetCoins()
-    {
-        return _coinsCollected;
-    }
-
-    public float GetTime()
-    {
-        return _elapsedTime;
-    }
-
     private void Win()
     {
         _gameOver = true;

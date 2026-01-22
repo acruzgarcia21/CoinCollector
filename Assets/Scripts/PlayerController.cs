@@ -4,18 +4,33 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerInputActions _playerInputActions;
     private Rigidbody _playerRigidBody;
+    private SphereCollider _sphereCollider;
 
-    [Header("Movement Fields")] [SerializeField] private float maxSpeed = 8f;
+    [Header("Movement Fields")] 
+    [SerializeField] private float maxSpeed = 8f;
     [SerializeField] private float acceleration = 30f;
     [SerializeField] private float braking = 20f;
     [SerializeField] private float jumpingForce = 5f;
 
-    [Header("Camera")] [SerializeField] private Transform cameraTransform;
+    [Header("Camera")] 
+    [SerializeField] private Transform cameraTransform;
+
+    [Header("Ground Check")] 
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundSkin = 0.05f;
+    [SerializeField] private float jumpBuffer = 0.12f;
+    [SerializeField] private float coyoteTime = 0.12f;
+    
+    private bool _jumpRequested;
+    private bool _isGrounded;
+    private float _jumpBufferTimer;
+    private float _coyoteTimer;
 
     private void Awake()
     {
         _playerInputActions = new PlayerInputActions();
         _playerRigidBody = GetComponent<Rigidbody>();
+        _sphereCollider = GetComponent<SphereCollider>();
     }
 
     private void OnEnable()
@@ -32,6 +47,35 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateGrounded();
+        
+        // Jump buffer + coyote time
+        _jumpBufferTimer -= Time.fixedDeltaTime;
+        _coyoteTimer = _isGrounded ? coyoteTime : _coyoteTimer - Time.fixedDeltaTime;
+
+        if ((_jumpRequested || _jumpBufferTimer > 0f) && _coyoteTimer > 0f)
+        {
+            _jumpRequested = false;
+            _jumpBufferTimer = 0f;
+            _coyoteTimer = 0f;
+            
+            // Make jump consistent 
+            Vector3 linearVelocity = _playerRigidBody.linearVelocity;
+            if (linearVelocity.y < 0f)
+            {
+                linearVelocity.y = 0f;
+            }
+
+            _playerRigidBody.linearVelocity = linearVelocity;
+        
+            _playerRigidBody.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
+        }
+        else
+        {
+            // Don't let a single input event "stick" forever
+            _jumpRequested = false;
+        }
+        
         Vector2 playerInput = _playerInputActions.Player.Movement.ReadValue<Vector2>();
         
         // Camera direction
@@ -84,6 +128,27 @@ public class PlayerController : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        _playerRigidBody.AddForce(Vector3.up * jumpingForce, ForceMode.Impulse);
+        _jumpRequested = true;
+        _jumpBufferTimer = jumpBuffer;
+    }
+    
+    private void UpdateGrounded()
+    {
+        // World-space center of the sphere collider
+        Vector3 centerWorld = transform.TransformPoint(_sphereCollider.center);
+        
+        // Approx radius in world units (assumes mostly uniform scale)
+        float radiusWorld = _sphereCollider.radius * transform.lossyScale.x;
+        
+        // Point near the bottom of the sphere
+        Vector3 feet = centerWorld + Vector3.down * (radiusWorld - groundSkin);
+        
+        // Check a small sphere at the "feet" for stable grounded detection
+        _isGrounded = Physics.CheckSphere(
+            feet,
+            groundSkin * 2f,
+            groundMask,
+            QueryTriggerInteraction.Ignore
+            );
     }
 }

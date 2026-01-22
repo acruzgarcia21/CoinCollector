@@ -1,13 +1,20 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI coinsText;
     [SerializeField] private TextMeshProUGUI timeText;
+    
+    [Header("Quit Button")] [SerializeField] private Button quitButton;
 
-    private void Awake() => Hide();
+    private void Awake()
+    {
+     Hide(); 
+     quitButton.onClick.AddListener(Application.Quit);
+    }
 
     public void ShowWin(int collected, int total, float timeSeconds)
     {

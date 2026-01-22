@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
@@ -8,8 +7,6 @@ public class Coin : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         GameManager.Instance.AddCoin(1);
-        Debug.Log(GameManager.Instance.GetCoins());
-        Debug.Log(GameManager.Instance.GetTime());
         Destroy(gameObject);
     }
 }
