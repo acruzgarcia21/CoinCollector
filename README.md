@@ -83,3 +83,10 @@ This project is not intended to be a complete game. Its purpose is to:
 
 ## Author
 Created as a learning project to explore Unity fundamentals, physics-based movement, and input handling.
+
+---
+
+## Gifs and Screenshots
+![GameOver](https://github.com/user-attachments/assets/bf96462a-c670-4261-b13b-00ddf6ad8e48)
+
+
